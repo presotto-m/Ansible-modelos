@@ -1,0 +1,21 @@
+---
+- hosts: distros
+  remote_user: root
+  tasks:
+    - name: "Instalando o Apache e o MYSQL"
+      apt: name={{ item }} state=present
+      with_items:
+        - apache2
+        - mysql-server
+        - python-mysqldb
+
+    - name: "Subindo o Apache e o MYSQL para que seja iniciado no boot"
+      service: name={{ item }} state=started enable=yes
+      with_items:
+        - apache2
+        - mysql
+
+    - name: "Criando um user para o mysql"
+      mysql_user: name=brasilfone
+                  password=123456
+                  priv=*.*:ALL state=present
